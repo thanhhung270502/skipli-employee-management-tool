@@ -1,0 +1,15 @@
+echo "Running pre-push hook for front-end side..."
+cd web || exit 1
+
+# Unsorted imports surface only as warnings (eslint-plugin-only-warn), so a plain
+# lint run never blocks them. Auto-sort with eslint --fix and stop the push if any
+# imports had to be reordered, so they never reach the remote even when pre-commit
+# was bypassed (--no-verify, IDE commit, hooks not installed).
+if npm run lint --silent 2>&1 | grep -q "simple-import-sort"; then
+  echo "✖ Unsorted imports detected — running eslint --fix to sort them..."
+  npm run lint:fix --silent
+  echo "✖ Imports were auto-sorted. Review the changes, commit them, then push again."
+  exit 1
+fi
+
+npm run lint && npm run check-types && npm run test -- --run
