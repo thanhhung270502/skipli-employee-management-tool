@@ -59,12 +59,12 @@ export const createEmployee = async (
       return;
     }
 
-    const { employeeId } = await employeeService.createEmployee(value);
+    const result = await employeeService.createEmployee(value);
     res
       .status(201)
       .json({
         success: true,
-        employeeId,
+        ...result,
         message: "Employee created and invite email sent",
       });
   } catch (err) {

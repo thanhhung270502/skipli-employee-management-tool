@@ -52,4 +52,6 @@ export interface UpdateProfileRequest {
 
 export interface CreateEmployeeResult {
   employeeId: string;
+  inviteToken?: string;
+  setupUrl?: string;
 }

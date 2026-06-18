@@ -78,7 +78,13 @@ export const createEmployee = async (
   await db.collection("employees").doc(employeeId).set(employee);
   await sendEmployeeInviteEmail({ to: email, name, inviteToken });
 
-  return { employeeId };
+  return {
+    employeeId,
+    ...(process.env.NODE_ENV !== "production" ? {
+      inviteToken,
+      setupUrl: `${process.env.FRONTEND_URL ?? 'http://localhost:3000'}/setup-account?token=${inviteToken}`
+    } : {})
+  };
 };
 
 export const updateEmployee = async (
