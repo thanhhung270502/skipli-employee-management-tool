@@ -5,6 +5,11 @@ const FROM = {
   name: process.env.SENDGRID_FROM_NAME ?? 'Skipli App',
 };
 
+const isSendGridConfigured = (): boolean => {
+  const apiKey = process.env.SENDGRID_API_KEY;
+  return !!(apiKey && !apiKey.startsWith('your_') && !apiKey.includes('xxxx'));
+};
+
 const initSendGrid = (): void => {
   const apiKey = process.env.SENDGRID_API_KEY;
   if (!apiKey) {
@@ -21,12 +26,21 @@ interface InviteEmailParams {
 }
 
 export const sendEmployeeInviteEmail = async ({ to, name, inviteToken }: InviteEmailParams): Promise<{ success: boolean }> => {
-  initSendGrid();
   const setupUrl = `${process.env.FRONTEND_URL ?? 'http://localhost:3000'}/setup-account?token=${inviteToken}`;
 
-  const msg: sgMail.MailDataRequired = {
-    to,
-    from: FROM,
+  if (!isSendGridConfigured()) {
+    console.log('\n--- 🧪 DEVELOPMENT MODE MOCK EMAIL (INVITE) ---');
+    console.log(`To: ${to} (${name})`);
+    console.log(`Invite URL: ${setupUrl}`);
+    console.log('------------------------------------------------\n');
+    return { success: true };
+  }
+
+  try {
+    initSendGrid();
+    const msg: sgMail.MailDataRequired = {
+      to,
+      from: FROM,
     subject: 'Welcome to Skipli — Set Up Your Account',
     html: `
       <!DOCTYPE html>
@@ -71,9 +85,18 @@ export const sendEmployeeInviteEmail = async ({ to, name, inviteToken }: InviteE
     `,
   };
 
-  await sgMail.send(msg);
-  console.log(`📧 Invite email sent to ${to}`);
-  return { success: true };
+    await sgMail.send(msg);
+    console.log(`📧 Invite email sent to ${to}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ SendGrid send failed. Falling back to console log for development:');
+    console.error(error instanceof Error ? error.message : error);
+    console.log('\n--- 🧪 DEVELOPMENT MODE MOCK EMAIL (INVITE FALLBACK) ---');
+    console.log(`To: ${to} (${name})`);
+    console.log(`Invite URL: ${setupUrl}`);
+    console.log('--------------------------------------------------------\n');
+    return { success: true };
+  }
 };
 
 // ─── OTP Email ────────────────────────────────────────────────────
@@ -84,12 +107,21 @@ interface OtpEmailParams {
 }
 
 export const sendOtpEmail = async ({ to, name, otp }: OtpEmailParams): Promise<{ success: boolean }> => {
-  initSendGrid();
   const expiryMinutes = process.env.OTP_EXPIRY_MINUTES ?? '15';
 
-  const msg: sgMail.MailDataRequired = {
-    to,
-    from: FROM,
+  if (!isSendGridConfigured()) {
+    console.log('\n--- 🧪 DEVELOPMENT MODE MOCK EMAIL (OTP) ---');
+    console.log(`To: ${to}`);
+    console.log(`OTP Code: ${otp}`);
+    console.log('---------------------------------------------\n');
+    return { success: true };
+  }
+
+  try {
+    initSendGrid();
+    const msg: sgMail.MailDataRequired = {
+      to,
+      from: FROM,
     subject: `Your Skipli Access Code: ${otp}`,
     html: `
       <!DOCTYPE html>
@@ -133,7 +165,16 @@ export const sendOtpEmail = async ({ to, name, otp }: OtpEmailParams): Promise<{
     `,
   };
 
-  await sgMail.send(msg);
-  console.log(`📧 OTP email sent to ${to}`);
-  return { success: true };
+    await sgMail.send(msg);
+    console.log(`📧 OTP email sent to ${to}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ SendGrid send failed. Falling back to console log for development:');
+    console.error(error instanceof Error ? error.message : error);
+    console.log('\n--- 🧪 DEVELOPMENT MODE MOCK EMAIL (OTP FALLBACK) ---');
+    console.log(`To: ${to}`);
+    console.log(`OTP Code: ${otp}`);
+    console.log('-----------------------------------------------------\n');
+    return { success: true };
+  }
 };

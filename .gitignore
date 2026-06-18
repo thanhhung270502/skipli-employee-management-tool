@@ -57,5 +57,6 @@
 
 # OS
 /back-end/.DS_Store
+/back-end/dist
 
 tools

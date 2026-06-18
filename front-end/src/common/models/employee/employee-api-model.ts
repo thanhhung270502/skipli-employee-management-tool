@@ -19,10 +19,10 @@ export const API_GET_ALL_EMPLOYEES: APIDefinition<
 > = {
   method: APIMethod.GET,
   baseUrl: APIBaseRoutes.OWNER,
-  subUrl: "/get-all-employees",
+  subUrl: "/employees",
   requestBody: undefined,
   responseBody: {} as GetAllEmployeesResponse,
-  buildUrlPath: () => `${APIBaseRoutes.OWNER}/get-all-employees`,
+  buildUrlPath: () => `${APIBaseRoutes.OWNER}/employees`,
 };
 
 export const API_GET_EMPLOYEE: APIDefinition<
@@ -31,10 +31,10 @@ export const API_GET_EMPLOYEE: APIDefinition<
 > = {
   method: APIMethod.GET,
   baseUrl: APIBaseRoutes.OWNER,
-  subUrl: "/get-employee/:id",
+  subUrl: "/employees/:employeeId",
   requestBody: {} as { employeeId: string },
   responseBody: {} as GetEmployeeResponse,
-  buildUrlPath: (id: string) => `${APIBaseRoutes.OWNER}/get-employee/${id}`,
+  buildUrlPath: (id: string) => `${APIBaseRoutes.OWNER}/employees/${id}`,
 };
 
 export const API_CREATE_EMPLOYEE: APIDefinition<
@@ -43,10 +43,10 @@ export const API_CREATE_EMPLOYEE: APIDefinition<
 > = {
   method: APIMethod.POST,
   baseUrl: APIBaseRoutes.OWNER,
-  subUrl: "/create-employee",
+  subUrl: "/employees",
   requestBody: {} as CreateEmployeeRequest,
   responseBody: {} as CreateEmployeeResponse,
-  buildUrlPath: () => `${APIBaseRoutes.OWNER}/create-employee`,
+  buildUrlPath: () => `${APIBaseRoutes.OWNER}/employees`,
 };
 
 export const API_UPDATE_EMPLOYEE: APIDefinition<
@@ -55,10 +55,10 @@ export const API_UPDATE_EMPLOYEE: APIDefinition<
 > = {
   method: APIMethod.PUT,
   baseUrl: APIBaseRoutes.OWNER,
-  subUrl: "/update-employee",
+  subUrl: "/employees/:employeeId",
   requestBody: {} as UpdateEmployeeRequest,
   responseBody: {} as UpdateEmployeeResponse,
-  buildUrlPath: () => `${APIBaseRoutes.OWNER}/update-employee`,
+  buildUrlPath: (id: string) => `${APIBaseRoutes.OWNER}/employees/${id}`,
 };
 
 export const API_DELETE_EMPLOYEE: APIDefinition<
@@ -67,10 +67,10 @@ export const API_DELETE_EMPLOYEE: APIDefinition<
 > = {
   method: APIMethod.DELETE,
   baseUrl: APIBaseRoutes.OWNER,
-  subUrl: "/delete-employee/:id",
+  subUrl: "/employees/:employeeId",
   requestBody: {} as { employeeId: string },
   responseBody: {} as DeleteEmployeeResponse,
-  buildUrlPath: (id: string) => `${APIBaseRoutes.OWNER}/delete-employee/${id}`,
+  buildUrlPath: (id: string) => `${APIBaseRoutes.OWNER}/employees/${id}`,
 };
 
 export const API_GET_PROFILE: APIDefinition<undefined, GetProfileResponse> = {

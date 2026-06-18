@@ -8,15 +8,14 @@ import type {
   MarkTaskDoneResponse,
 } from "./task-model";
 
-export const API_GET_ALL_TASKS: APIDefinition<undefined, GetAllTasksResponse> =
-  {
-    method: APIMethod.GET,
-    baseUrl: APIBaseRoutes.OWNER,
-    subUrl: "/get-all-tasks",
-    requestBody: undefined,
-    responseBody: {} as GetAllTasksResponse,
-    buildUrlPath: () => `${APIBaseRoutes.OWNER}/get-all-tasks`,
-  };
+export const API_GET_ALL_TASKS: APIDefinition<undefined, GetAllTasksResponse> = {
+  method: APIMethod.GET,
+  baseUrl: APIBaseRoutes.OWNER,
+  subUrl: "/tasks",
+  requestBody: undefined,
+  responseBody: {} as GetAllTasksResponse,
+  buildUrlPath: () => `${APIBaseRoutes.OWNER}/tasks`,
+};
 
 export const API_CREATE_TASK: APIDefinition<
   CreateTaskRequest,
@@ -24,10 +23,10 @@ export const API_CREATE_TASK: APIDefinition<
 > = {
   method: APIMethod.POST,
   baseUrl: APIBaseRoutes.OWNER,
-  subUrl: "/create-task",
+  subUrl: "/tasks",
   requestBody: {} as CreateTaskRequest,
   responseBody: {} as CreateTaskResponse,
-  buildUrlPath: () => `${APIBaseRoutes.OWNER}/create-task`,
+  buildUrlPath: () => `${APIBaseRoutes.OWNER}/tasks`,
 };
 
 export const API_GET_MY_TASKS: APIDefinition<undefined, GetMyTasksResponse> = {
@@ -45,7 +44,7 @@ export const API_MARK_TASK_DONE: APIDefinition<
 > = {
   method: APIMethod.PUT,
   baseUrl: APIBaseRoutes.EMPLOYEE,
-  subUrl: "/tasks/:id/done",
+  subUrl: "/tasks/:taskId/done",
   requestBody: undefined,
   responseBody: {} as MarkTaskDoneResponse,
   buildUrlPath: (id: string) => `${APIBaseRoutes.EMPLOYEE}/tasks/${id}/done`,

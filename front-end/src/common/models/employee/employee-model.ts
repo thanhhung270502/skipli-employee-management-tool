@@ -28,8 +28,8 @@ export interface CreateEmployeeRequest {
   role?: string;
 }
 export interface CreateEmployeeResponse {
+  employeeId: string;
   message: string;
-  employee: EmployeeObject;
 }
 
 export interface UpdateEmployeeRequest {
@@ -42,7 +42,6 @@ export interface UpdateEmployeeRequest {
 }
 export interface UpdateEmployeeResponse {
   message: string;
-  employee: EmployeeObject;
 }
 
 export interface DeleteEmployeeRequest {
@@ -71,5 +70,4 @@ export interface UpdateProfileRequest {
 }
 export interface UpdateProfileResponse {
   message: string;
-  employee: EmployeeObject;
 }

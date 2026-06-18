@@ -20,10 +20,10 @@ export const API_OWNER_CREATE_CODE: APIDefinition<
 > = {
   method: APIMethod.POST,
   baseUrl: APIBaseRoutes.OWNER,
-  subUrl: "/create-access-code",
+  subUrl: "/create-new-access-code",
   requestBody: {} as OwnerCreateCodeRequest,
   responseBody: {} as OwnerCreateCodeResponse,
-  buildUrlPath: () => `${APIBaseRoutes.OWNER}/create-access-code`,
+  buildUrlPath: () => `${APIBaseRoutes.OWNER}/create-new-access-code`,
 };
 
 export const API_OWNER_VALIDATE_CODE: APIDefinition<

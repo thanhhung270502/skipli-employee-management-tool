@@ -1,15 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
+import { AppError } from '../errors/app-error';
 
-interface AppError extends Error {
+interface LegacyAppError extends Error {
   statusCode?: number;
   status?: number;
 }
 
-/**
- * Centralized error handler middleware
- */
 export const errorHandler = (
-  err: AppError,
+  err: LegacyAppError,
   _req: Request,
   res: Response,
   _next: NextFunction
@@ -19,7 +17,7 @@ export const errorHandler = (
     console.error(err.stack);
   }
 
-  const status = err.statusCode ?? err.status ?? 500;
+  const status = err instanceof AppError ? err.statusCode : (err.statusCode ?? err.status ?? 500);
   const message = err.message ?? 'Internal Server Error';
 
   res.status(status).json({
@@ -29,9 +27,6 @@ export const errorHandler = (
   });
 };
 
-/**
- * 404 handler for unmatched routes
- */
 export const notFound = (req: Request, res: Response): void => {
   res.status(404).json({
     success: false,

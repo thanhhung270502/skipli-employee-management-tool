@@ -1,9 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { JwtPayload, JwtOwnerPayload, JwtEmployeePayload, AuthRequest } from '../types';
 
-// ─── Generate Token ────────────────────────────────────────────────
-export const generateToken = (payload: Omit<JwtOwnerPayload, 'iat' | 'exp'> | Omit<JwtEmployeePayload, 'iat' | 'exp'>): string => {
+export const generateToken = (
+  payload: Omit<JwtOwnerPayload, 'iat' | 'exp'> | Omit<JwtEmployeePayload, 'iat' | 'exp'>
+): string => {
   const secret = process.env.JWT_SECRET;
   if (!secret) throw new Error('JWT_SECRET is not configured');
 
@@ -12,10 +13,9 @@ export const generateToken = (payload: Omit<JwtOwnerPayload, 'iat' | 'exp'> | Om
   });
 };
 
-// ─── Verify Middleware ─────────────────────────────────────────────
 export const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction): void => {
   const authHeader = req.headers['authorization'];
-  const token = authHeader?.split(' ')[1]; // Bearer <token>
+  const token = authHeader?.split(' ')[1];
 
   if (!token) {
     res.status(401).json({ success: false, message: 'Access token required' });
@@ -34,7 +34,6 @@ export const authenticateToken = (req: AuthRequest, res: Response, next: NextFun
   }
 };
 
-// ─── Role Guards ───────────────────────────────────────────────────
 export const requireOwner = (req: AuthRequest, res: Response, next: NextFunction): void => {
   if (req.user?.role !== 'owner') {
     res.status(403).json({ success: false, message: 'Owner access required' });

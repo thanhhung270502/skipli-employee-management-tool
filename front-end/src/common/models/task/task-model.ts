@@ -22,7 +22,7 @@ export interface CreateTaskRequest {
   dueDate?: string;
 }
 export interface CreateTaskResponse {
-  message: string;
+  taskId: string;
   task: TaskObject;
 }
 
@@ -36,5 +36,4 @@ export interface GetMyTasksResponse {
 
 export interface MarkTaskDoneResponse {
   message: string;
-  task: TaskObject;
 }

@@ -8,9 +8,9 @@ import { EMPLOYEES_QUERY_KEY } from "@/shared/hooks";
 export const useUpdateEmployeeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<UpdateEmployeeResponse, Error, UpdateEmployeeRequest>({
-    mutationFn: async (data) => {
+    mutationFn: async ({ employeeId, ...data }) => {
       const res = await axiosInstance.put<UpdateEmployeeResponse>(
-        API_UPDATE_EMPLOYEE.buildUrlPath(),
+        API_UPDATE_EMPLOYEE.buildUrlPath(employeeId),
         data
       );
       return res.data;
