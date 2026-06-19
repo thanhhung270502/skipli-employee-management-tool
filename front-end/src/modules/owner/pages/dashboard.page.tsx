@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { Users, CheckSquare, Clock, TrendingUp } from "lucide-react";
 import { useQueryEmployees, useQueryAllTasks } from "@/shared/hooks";
+import { DashboardSkeleton } from "@/shared/components";
 import { StatCard } from "../components";
 
 export function DashboardPage() {
@@ -45,12 +46,7 @@ export function DashboardPage() {
   const recentEmployees = employees.slice(0, 5);
 
   if (loading) {
-    return (
-      <div className="page-loading">
-        <div className="spinner spinner-primary" />
-        <span>Loading dashboard...</span>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (

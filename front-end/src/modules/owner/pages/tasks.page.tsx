@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import toast from "react-hot-toast";
 import { useQueryAllTasks, useQueryEmployees, useCreateTaskMutation } from "@/shared/hooks";
+import { TaskListSkeleton } from "@/shared/components";
 import { useTaskForm } from "../hooks";
 import { TaskCard, TaskFormModal } from "../components";
 
@@ -40,8 +41,14 @@ export function TasksPage() {
 
   if (tasksLoading) {
     return (
-      <div className="page-loading">
-        <div className="spinner spinner-primary" />
+      <div>
+        <div className="page-header">
+          <div>
+            <div className="skeleton" style={{ width: 120, height: 32, marginBottom: 8 }} />
+            <div className="skeleton" style={{ width: 180, height: 16 }} />
+          </div>
+        </div>
+        <TaskListSkeleton count={5} />
       </div>
     );
   }

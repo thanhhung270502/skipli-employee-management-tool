@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "@/common/lib";
 import { API_MARK_TASK_DONE } from "@/common/models/task";
 import type { MarkTaskDoneResponse } from "@/common/models/task";
-import { MY_TASKS_QUERY_KEY } from "@/shared/hooks";
+import { MY_TASKS_QUERY_KEY, ALL_TASKS_QUERY_KEY } from "@/shared/hooks";
 
 export const useMarkTaskDoneMutation = () => {
   const queryClient = useQueryClient();
@@ -17,6 +17,7 @@ export const useMarkTaskDoneMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: MY_TASKS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ALL_TASKS_QUERY_KEY });
     },
   });
 };

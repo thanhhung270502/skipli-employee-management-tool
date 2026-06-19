@@ -10,8 +10,29 @@ interface TaskCardProps {
 
 const getTimestamp = (ts: unknown): Date | null => {
   if (!ts) return null;
-  const t = ts as { seconds?: number };
-  return t?.seconds ? new Date(t.seconds * 1000) : new Date(ts as string);
+  if (ts instanceof Date) {
+    return isNaN(ts.getTime()) ? null : ts;
+  }
+  if (typeof ts === "object") {
+    const t = ts as { _seconds?: number; seconds?: number; toDate?: () => Date };
+    if (typeof t.toDate === "function") {
+      try {
+        const d = t.toDate();
+        return isNaN(d.getTime()) ? null : d;
+      } catch {
+        // ignore
+      }
+    }
+    const secs = t._seconds ?? t.seconds;
+    if (typeof secs === "number") {
+      return new Date(secs * 1000);
+    }
+  }
+  if (typeof ts === "string" || typeof ts === "number") {
+    const d = new Date(ts);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  return null;
 };
 
 export function TaskCard({ task, index }: TaskCardProps) {

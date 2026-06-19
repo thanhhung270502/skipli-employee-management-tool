@@ -7,6 +7,8 @@ import type { GetAllTasksResponse, GetMyTasksResponse } from "@/common/models/ta
 export const ALL_TASKS_QUERY_KEY = ["tasks", "all"] as const;
 export const MY_TASKS_QUERY_KEY = ["tasks", "mine"] as const;
 
+const TASK_POLL_INTERVAL_MS = 5000;
+
 export const useQueryAllTasks = () =>
   useQuery<GetAllTasksResponse>({
     queryKey: ALL_TASKS_QUERY_KEY,
@@ -14,6 +16,7 @@ export const useQueryAllTasks = () =>
       const res = await axiosInstance.get<GetAllTasksResponse>(API_GET_ALL_TASKS.buildUrlPath());
       return res.data ?? { tasks: [] };
     },
+    refetchInterval: TASK_POLL_INTERVAL_MS,
   });
 
 export const useQueryMyTasks = () =>
@@ -23,4 +26,5 @@ export const useQueryMyTasks = () =>
       const res = await axiosInstance.get<GetMyTasksResponse>(API_GET_MY_TASKS.buildUrlPath());
       return res.data ?? { tasks: [] };
     },
+    refetchInterval: TASK_POLL_INTERVAL_MS,
   });

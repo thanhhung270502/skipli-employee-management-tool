@@ -13,16 +13,32 @@ interface EmployeeTaskCardProps {
 
 const getDate = (ts: unknown): Date | null => {
   if (!ts) return null;
-  const t = ts as { seconds?: number };
-  return t?.seconds ? new Date(t.seconds * 1000) : new Date(ts as string);
+  if (ts instanceof Date) {
+    return isNaN(ts.getTime()) ? null : ts;
+  }
+  if (typeof ts === "object") {
+    const t = ts as { _seconds?: number; seconds?: number; toDate?: () => Date };
+    if (typeof t.toDate === "function") {
+      try {
+        const d = t.toDate();
+        return isNaN(d.getTime()) ? null : d;
+      } catch {
+        // ignore
+      }
+    }
+    const secs = t._seconds ?? t.seconds;
+    if (typeof secs === "number") {
+      return new Date(secs * 1000);
+    }
+  }
+  if (typeof ts === "string" || typeof ts === "number") {
+    const d = new Date(ts);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  return null;
 };
 
-export function EmployeeTaskCard({
-  task,
-  index,
-  isCompleting,
-  onMarkDone,
-}: EmployeeTaskCardProps) {
+export function EmployeeTaskCard({ task, index, isCompleting, onMarkDone }: EmployeeTaskCardProps) {
   const dueDate = getDate(task.dueDate);
   const completedAt = getDate(task.completedAt);
 
@@ -98,7 +114,9 @@ export function EmployeeTaskCard({
         <Clock size={10} style={{ color: "var(--warning)" }} />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 600, color: "var(--text-primary)", marginBottom: 4 }}>
+        <h3
+          style={{ fontSize: 15, fontWeight: 600, color: "var(--text-primary)", marginBottom: 4 }}
+        >
           {task.title}
         </h3>
         {task.description && (
@@ -107,7 +125,15 @@ export function EmployeeTaskCard({
           </p>
         )}
         {dueDate && (
-          <span style={{ fontSize: 12, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 4 }}>
+          <span
+            style={{
+              fontSize: 12,
+              color: "var(--text-muted)",
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
             <Calendar size={11} />
             Due {format(dueDate, "MMM d, yyyy")}
           </span>

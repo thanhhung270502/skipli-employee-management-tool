@@ -9,6 +9,7 @@ import {
   useUpdateEmployeeMutation,
   useDeleteEmployeeMutation,
 } from "@/shared/hooks";
+import { TableSkeleton } from "@/shared/components";
 import type { EmployeeObject } from "@/common/models/employee";
 import { useEmployeeForm } from "../hooks";
 import { EmployeeFormModal, EmployeeTable } from "../components";
@@ -106,9 +107,7 @@ export function EmployeesPage() {
       </div>
 
       {isLoading ? (
-        <div className="page-loading">
-          <div className="spinner spinner-primary" />
-        </div>
+        <TableSkeleton rows={6} />
       ) : filtered.length === 0 ? (
         <div className="empty-state">
           <div className="empty-state-icon">👥</div>

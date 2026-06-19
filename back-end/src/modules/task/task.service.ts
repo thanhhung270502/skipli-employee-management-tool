@@ -54,12 +54,22 @@ export const listMyTasks = async (
   const snapshot = await db
     .collection("tasks")
     .where("assignedTo", "==", employeeId)
-    .orderBy("createdAt", "desc")
     .get();
 
-  return snapshot.docs.map(
+  const tasks = snapshot.docs.map(
     (doc) => ({ id: doc.id, ...doc.data() } as TaskPublic)
   );
+
+  tasks.sort((a, b) => {
+    const getMs = (val: any) => {
+      if (!val) return 0;
+      if (typeof val.toDate === "function") return val.toDate().getTime();
+      return new Date(val).getTime() || 0;
+    };
+    return getMs(b.createdAt) - getMs(a.createdAt);
+  });
+
+  return tasks;
 };
 
 export const markTaskDone = async (

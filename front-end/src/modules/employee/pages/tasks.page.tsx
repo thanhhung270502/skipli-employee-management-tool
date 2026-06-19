@@ -2,6 +2,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useQueryMyTasks, useMarkTaskDoneMutation } from "@/shared/hooks";
+import { TaskListSkeleton } from "@/shared/components";
 import { EmployeeTaskCard } from "../components";
 
 export function EmployeeTasksPage() {
@@ -28,8 +29,14 @@ export function EmployeeTasksPage() {
 
   if (isLoading) {
     return (
-      <div className="page-loading">
-        <div className="spinner spinner-primary" />
+      <div>
+        <div className="page-header">
+          <div>
+            <div className="skeleton" style={{ width: 140, height: 32, marginBottom: 8 }} />
+            <div className="skeleton" style={{ width: 200, height: 16 }} />
+          </div>
+        </div>
+        <TaskListSkeleton count={4} />
       </div>
     );
   }

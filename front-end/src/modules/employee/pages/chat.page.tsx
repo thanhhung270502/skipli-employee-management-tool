@@ -108,10 +108,31 @@ export function EmployeeChatPage() {
 
   const getTimestamp = (ts: unknown): string => {
     if (!ts) return "";
-    const t = ts as { seconds?: number };
-    const date = t?.seconds
-      ? new Date(t.seconds * 1000)
-      : new Date(ts as string);
+    let date: Date | null = null;
+    if (ts instanceof Date) {
+      date = isNaN(ts.getTime()) ? null : ts;
+    } else if (typeof ts === "object") {
+      const t = ts as { _seconds?: number; seconds?: number; toDate?: () => Date };
+      if (typeof t.toDate === "function") {
+        try {
+          const d = t.toDate();
+          if (!isNaN(d.getTime())) date = d;
+        } catch {
+          // ignore
+        }
+      }
+      if (!date) {
+        const secs = t._seconds ?? t.seconds;
+        if (typeof secs === "number") {
+          date = new Date(secs * 1000);
+        }
+      }
+    } else if (typeof ts === "string" || typeof ts === "number") {
+      const d = new Date(ts);
+      if (!isNaN(d.getTime())) date = d;
+    }
+
+    if (!date || isNaN(date.getTime())) return "";
     return format(date, "HH:mm");
   };
 
